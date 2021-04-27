@@ -10,9 +10,10 @@ import CoreData
 
 struct ContentView: View {
     // MARK: - PROPERTIES
+    
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @State var task: String = ""
     @State private var showNewTaskItem: Bool = false
-    
     
     // MARK: - FETCHING DATA
     @Environment(\.managedObjectContext) private var viewContext
@@ -44,6 +45,37 @@ struct ContentView: View {
                 // MARK: - MAIN VIEW
                 VStack {
                     // MARK: - HEADER
+                    
+                    HStack(spacing: 10) {
+                        // TITLE
+                        Text("Devote")
+                            .font(.system(.largeTitle, design: .rounded))
+                            .fontWeight(.heavy)
+                            .padding(.leading, 4)
+                        
+                        Spacer()
+                        
+                        // EDIT BUTTON
+                        EditButton()
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .padding(.horizontal, 10)
+                            .frame(minWidth: 70, minHeight: 24)
+                            .background(Capsule().stroke(Color.white, lineWidth: 2))
+                        
+                        // APPEARENCE BUTTON
+                        Button(action: {
+                            // TOGGLE APPEARENCE
+                            isDarkMode.toggle()
+                        }, label: {
+                            Image(systemName: isDarkMode ? "moon.circle.fill" : "moon.circle")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .font(.system(.title, design: .rounded))
+                        })
+                        
+                    } //: HSTACK
+                    .padding()
+                    .foregroundColor(.white)
                     
                     Spacer()
                     
@@ -105,13 +137,7 @@ struct ContentView: View {
                 UITableView.appearance().backgroundColor = UIColor.clear
             }
             .navigationBarTitle("Daily Tasks", displayMode: .large)
-            .toolbar {
-                #if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                #endif
-            } //: TOOLBAR
+            .navigationBarHidden(true)
             .background(BackgroundImageView())
             .background(backgroundGradient.ignoresSafeArea(.all))
         } //: NAVIGATION
